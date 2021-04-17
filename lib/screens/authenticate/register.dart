@@ -24,7 +24,6 @@ class _RegisterState extends State<Register> {
   // text field states
   String email = '';
   String password = '';
-  String userName ='';
   String error = '';
 
   @override
@@ -65,16 +64,16 @@ class _RegisterState extends State<Register> {
                 // email field
                 TextFormField(
                   // see constants.dart for decoration specs
-                    decoration: textInputDecoration.copyWith(hintText: 'user name'),
+                    decoration: textInputDecoration.copyWith(hintText: 'username'),
                     // makes sure field is not left empty
-                    validator: (val) => val.isEmpty ? 'Enter a user name' : null,
+                    validator: (val) => val.isEmpty ? 'Enter a username' : null,
                     onChanged: (val) {
                       /*
                       tricks firebase registerWithEmailAndPassword function into
                       thinking user name is a valid email (easier than making a
                       custom function)
                       */
-                      setState(() => email = ('${val}@fwitter.com'));
+                      setState(() => email = '${val}@fwitter.com');
                     }
                 ),
                 SizedBox(height: 20.0),
@@ -103,7 +102,7 @@ class _RegisterState extends State<Register> {
                       if(result == null) {
                         setState(() {
                           // returns to registration screen if Firebase decides user name has been used
-                          error = 'user name is taken';
+                          error = 'username is taken';
                           loading = false;
                         });
                       }

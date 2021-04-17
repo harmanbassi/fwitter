@@ -10,6 +10,7 @@ class DataBaseService {
   final CollectionReference postCollection = Firestore.instance.collection('posts');
   final CollectionReference userCollection = Firestore.instance.collection('users');
 
+  // TODO
   // creates a new document for a newly registered uid
   // updates data for existing users
 

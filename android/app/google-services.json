@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "807147266198",
+    "project_id": "fwitter-74390",
+    "storage_bucket": "fwitter-74390.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807147266198:android:d7270091ec8ad34a27e2b7",
+        "android_client_info": {
+          "package_name": "harman.fwitter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "807147266198-ticcm3gkf8iml6vfd5br4dtjrd236kh4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLyezl_K3qWmnBlUO8qNUZ9bMhG5bAPCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "807147266198-ticcm3gkf8iml6vfd5br4dtjrd236kh4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
