@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fwitter/models/post.dart';
+import 'package:fwitter/models/user.dart';
 import 'package:fwitter/screens/home/post_list.dart';
 import 'package:fwitter/screens/home/settings_form.dart';
 import 'package:fwitter/services/auth.dart';
@@ -24,8 +25,10 @@ class Home extends StatelessWidget {
     }
 
     // allows access to data from database
-    return StreamProvider<List<Post>>.value(
-      value: DataBaseService().posts,
+    return
+    //TODO
+      StreamProvider<List<UserData>>.value(
+      value: DataBaseService().users,
       child: Scaffold(
         appBar: AppBar(
           title: Text('Fwitter Home'),

@@ -1,4 +1,7 @@
-import 'package:fwitter/models/user.dart';
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
+import 'package:fwitter/models/user.dart' as u;
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'database.dart';
@@ -7,23 +10,24 @@ import 'database.dart';
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //final AssetImage profilePic = AssetImage('/assets/anon.png');
 
   // create User object based on FirebaseUser
-  User _userFromFirebaseUser (FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+  u.User _userFromFirebaseUser (User user) {
+    return user != null ? u.User(uid: user.uid) : null;
   }
 
   // user stream to determine changes in Firebase auth
-  Stream<User> get user {
-    return _auth.onAuthStateChanged
+  Stream<u.User> get user {
+    return _auth.authStateChanges()
         .map(_userFromFirebaseUser);
   }
 
   // sign in with email(username) and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -34,10 +38,11 @@ class AuthService {
   // register with email and password
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
 
-      // TODO: Create new document for registered user
+      // create new document for registered user
+      await DataBaseService(uid: user.uid).newUserData(email.substring(0, email.indexOf('@')));
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

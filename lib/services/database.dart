@@ -1,8 +1,9 @@
-import 'dart:ui';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fwitter/models/post.dart';
 import 'package:fwitter/models/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 
 class DataBaseService {
 
@@ -10,24 +11,31 @@ class DataBaseService {
   DataBaseService({this.uid});
 
   // collection reference
-  final CollectionReference postCollection = Firestore.instance.collection('posts');
-  final CollectionReference userCollection = Firestore.instance.collection('users');
+  final CollectionReference postCollection = FirebaseFirestore.instance.collection('posts');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
 
   // creates a new document for a newly registered uid
-  // updates data for existing users
-  Future updateUserData(String userName, Image profilePic) async {
-    await userCollection.document(uid).setData({
-      'userName': userName,
-      'profilePic': profilePic
+  Future newUserData(String userName) async {
+    await userCollection.doc(uid).set({
+      'userName' : userName
     });
   }
 
+  // updates data for existing users
+  Future updateUserData(String userName, Reference firebaseStorageRef) async {
+    await userCollection.doc(uid).set({
+      'userName': userName,
+      'reference' : firebaseStorageRef
+    });
+  }
+
+  // TODO
   // take snapshot and turn into into the list of posts
-  List<Post> _postListFromSnapshot(QuerySnapshot snapshot){
-    return snapshot.documents.map((doc) {
-      return Post(
-        text: doc.data['text'] ?? 'Post is empty',
-        image: doc.data['image'] ?? null
+  List<UserData> _postListFromSnapshot (QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return UserData(
+        uid: uid,
+        userName: doc.data()['userName'] ?? '',
       );
     }).toList();
   }
@@ -36,19 +44,19 @@ class DataBaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
-      userName : snapshot.data['userName'],
-      profilePic : snapshot.data['profilePic']
+      userName : snapshot.data()['userName'],
     );
   }
 
+  //TODO
   // get posts stream for changes
-  Stream<List<Post>> get posts {
-    return postCollection.snapshots().map(_postListFromSnapshot);
+  Stream<List<UserData>> get users {
+    return userCollection.snapshots().map(_postListFromSnapshot);
   }
 
   // get user doc Stream
   Stream<UserData> get userData {
-    return postCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+    return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
 }

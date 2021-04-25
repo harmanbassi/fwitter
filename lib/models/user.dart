@@ -14,7 +14,7 @@ class UserData {
 
   final String uid;
   final String userName;
-  final Image profilePic;
+  FileImage profilePic;
 
   UserData({this.uid, this.userName, this.profilePic});
 

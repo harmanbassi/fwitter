@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fwitter/models/post.dart';
+import 'package:fwitter/models/user.dart';
 
 class PostTile extends StatelessWidget {
 
-  final Post post;
+  // TODO
+  final UserData post;
   PostTile({this.post});
 
   @override
@@ -16,10 +18,11 @@ class PostTile extends StatelessWidget {
           leading: CircleAvatar(
             radius: 25.0,
             backgroundColor: Colors.red,
-            backgroundImage: AssetImage('assets/anon.png'),
+            // TODO
+            backgroundImage: post.profilePic
           ),
-          title: Text(post.postedBy.userName),
-          subtitle: Text(post.text),
+          title: Text(post.userName),
+
         ),
       )
     );

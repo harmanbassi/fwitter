@@ -102,7 +102,7 @@ class _RegisterState extends State<Register> {
                       if(result == null) {
                         setState(() {
                           // returns to registration screen if Firebase decides user name has been used
-                          error = 'username is taken';
+                          error = 'username is taken or \'@\' (not allowed) used in username';
                           loading = false;
                         });
                       }
