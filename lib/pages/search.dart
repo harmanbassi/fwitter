@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fwitter/models/user.dart';
-import 'package:fwitter/pages/activity_feed.dart';
 import 'package:fwitter/pages/home.dart';
+import 'package:fwitter/pages/profile.dart';
 import 'package:fwitter/widgets/progress.dart';
 
 class Search extends StatefulWidget {
@@ -55,13 +55,12 @@ class _SearchState extends State<Search>
   Container buildNoContent() {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
-      color: Colors.blue[50],
       child: Center(
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/search.svg',
+              'assets/images/search.svg',
               height: orientation == Orientation.portrait ? 300.0 : 200.0,
             ),
             Text(
@@ -88,7 +87,7 @@ class _SearchState extends State<Search>
           return circularProgress();
         }
         List<UserResult> searchResults = [];
-        snapshot.data.docs.forEach((doc) {
+        snapshot.data.documents.forEach((doc) {
           User user = User.fromDocument(doc);
           UserResult searchResult = UserResult(user);
           searchResults.add(searchResult);
@@ -110,7 +109,7 @@ class _SearchState extends State<Search>
       backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
       appBar: buildSearchField(),
       body:
-          searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
+      searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
     );
   }
 }
@@ -136,7 +135,11 @@ class UserResult extends StatelessWidget {
               title: Text(
                 user.username,
                 style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                user.username,
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ),
@@ -145,6 +148,18 @@ class UserResult extends StatelessWidget {
             color: Colors.white54,
           ),
         ],
+      ),
+    );
+  }
+
+  showProfile(BuildContext context, {String profileId}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            Profile(
+              profileId: profileId,
+            ),
       ),
     );
   }

@@ -337,24 +337,6 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         title: Text('Profile'),
         backgroundColor: Colors.blueAccent,
-          actions: [
-            // Logout Button
-            TextButton.icon(
-              onPressed: () async {
-                await _auth.logout();
-              },
-              label: Text(
-                'logout',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              icon : Icon(
-                  Icons.person,
-                  color: Colors.white
-              ),
-            ),
-          ]
       ),
       body: ListView(
         children: <Widget>[

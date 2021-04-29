@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as f;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fwitter/pages/activity_feed.dart';
 import 'package:fwitter/pages/authenticate/auth.dart';
 import 'package:fwitter/pages/profile.dart';
 import 'package:fwitter/pages/search.dart';
@@ -68,7 +66,6 @@ class _HomeState extends State<Home> {
       body: PageView(
         children: <Widget>[
           Timeline(currentUser: currentUser),
-          ActivityFeed(),
           Upload(currentUser: currentUser),
           Search(),
           Profile(profileId: currentUser?.id),
@@ -83,7 +80,6 @@ class _HomeState extends State<Home> {
           activeColor: Theme.of(context).primaryColor,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.whatshot)),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications_active)),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.add,

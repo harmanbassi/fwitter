@@ -5,10 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fwitter/models/user.dart';
-import 'package:fwitter/pages/activity_feed.dart';
 import 'package:fwitter/pages/authenticate/auth.dart' as a;
 import 'package:fwitter/pages/comments.dart';
 import 'package:fwitter/pages/home.dart';
+import 'package:fwitter/pages/profile.dart';
 import 'package:fwitter/widgets/custom_image.dart';
 import 'package:fwitter/widgets/progress.dart';
 
@@ -115,9 +115,9 @@ class _PostState extends State<Post> {
           ),
           trailing: isPostOwner
               ? IconButton(
-                  onPressed: () => handleDeletePost(context),
-                  icon: Icon(Icons.more_vert),
-                )
+            onPressed: () => handleDeletePost(context),
+            icon: Icon(Icons.more_vert),
+          )
               : Text(''),
         );
       },
@@ -287,12 +287,13 @@ class _PostState extends State<Post> {
             ),
             Padding(padding: EdgeInsets.only(right: 20.0)),
             GestureDetector(
-              onTap: () => showComments(
-                context,
-                postId: postId,
-                ownerId: ownerId,
-                mediaUrl: mediaUrl,
-              ),
+              onTap: () =>
+                  showComments(
+                    context,
+                    postId: postId,
+                    ownerId: ownerId,
+                    mediaUrl: mediaUrl,
+                  ),
               child: Icon(
                 Icons.chat,
                 size: 28.0,
@@ -348,15 +349,27 @@ class _PostState extends State<Post> {
       ],
     );
   }
-}
 
-showComments(BuildContext context,
-    {String postId, String ownerId, String mediaUrl}) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) {
-    return Comments(
-      postId: postId,
-      postOwnerId: ownerId,
-      postMediaUrl: mediaUrl,
+  showProfile(BuildContext context, {String profileId}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            Profile(
+              profileId: profileId,
+            ),
+      ),
     );
-  }));
+  }
+
+  showComments(BuildContext context,
+      {String postId, String ownerId, String mediaUrl}) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Comments(
+        postId: postId,
+        postOwnerId: ownerId,
+        postMediaUrl: mediaUrl,
+      );
+    }));
+  }
 }

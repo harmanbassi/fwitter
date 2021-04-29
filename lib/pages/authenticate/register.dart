@@ -99,6 +99,7 @@ class _RegisterState extends State<Register> {
                   child: ElevatedButton(
                     child: Text('Register'),
                     onPressed: () async {
+
                       // works if it receives null from validators
                       if(_formKey.currentState.validate()) {
                         // go to loading screen while waiting for authentication
@@ -109,7 +110,6 @@ class _RegisterState extends State<Register> {
                           setState(() {
                             // returns to registration screen if Firebase decides user name has been used
                             error = 'username is taken';
-
                             loading = false;
                           });
                         }
