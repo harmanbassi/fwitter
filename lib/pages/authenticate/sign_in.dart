@@ -1,4 +1,4 @@
-import 'package:fwitter/services/auth.dart';
+import 'package:fwitter/pages/authenticate/auth.dart';
 import 'package:fwitter/shared/constants.dart';
 import 'package:fwitter/shared/loading.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,9 @@ class SignIn extends StatefulWidget {
 
   // helps to toggle between sign in and registration screens (see authenticate)
   final Function toggleView;
-  SignIn({this.toggleView});
+  final Function setIsAuth;
+  SignIn({this.toggleView, this.setIsAuth});
+
   @override
   _SignInState createState() => _SignInState();
 }

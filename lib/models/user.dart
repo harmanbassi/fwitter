@@ -1,21 +1,21 @@
-// class for user id
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
+  final String id;
+  final String username;
+  String photoUrl;
 
-  final String uid;
+  User({
+    this.id,
+    this.username,
+    this.photoUrl,
+  });
 
-  User({this.uid});
-
-}
-
-// class for user data
-class UserData {
-
-  final String uid;
-  final String userName;
-  FileImage profilePic;
-
-  UserData({this.uid, this.userName, this.profilePic});
-
+  factory User.fromDocument(DocumentSnapshot doc) {
+    return User(
+      id: doc['id'],
+      username: doc['username'],
+      photoUrl: doc['photoUrl'],
+    );
+  }
 }

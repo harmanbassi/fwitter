@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fwitter/screens/wrapper.dart';
+import 'package:fwitter/pages/authenticate/auth.dart';
+import 'package:fwitter/pages/home.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' as f;
 import 'models/user.dart';
-import 'package:fwitter/services/auth.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,16 +13,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // StreamProvider allows us to access changes in auth state (from auth.dart)
-    // in all widgets and provides values to wrapper
-    return StreamProvider<User>.value(
-      value: AuthService().user,
-      child: MaterialApp(
-        home: Wrapper(),
+    return StreamProvider<f.User>.value(
+    value: AuthService().user,
+    child: MaterialApp(
+      title: 'Fwitter',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.teal,
       ),
+      home: Home(),
+    ),
     );
   }
 }

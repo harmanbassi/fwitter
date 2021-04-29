@@ -36,6 +36,11 @@ dependencies:
   image_cropper: ^1.4.0
   firebase_storage: ^8.0.4
   firebase_core: ^1.0.4
+  flutter_svg: ^0.22.0
+  cached_network_image: ^3.0.0
+  timeago: ^3.0.2
+  google_sign_in: ^5.0.2
+  animator: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fwitter/services/auth.dart';
+import 'package:fwitter/pages/authenticate/auth.dart';
+import 'package:fwitter/pages/home.dart';
 import 'package:fwitter/shared/constants.dart';
 import 'package:fwitter/shared/loading.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 // handling of registration for new users
 class Register extends StatefulWidget {
@@ -25,6 +28,7 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String error = '';
+  String username;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,7 @@ class _RegisterState extends State<Register> {
                 // email field
                 TextFormField(
                   // see constants.dart for decoration specs
-                    decoration: textInputDecoration.copyWith(hintText: 'username'),
+                    decoration: textInputDecoration.copyWith(hintText: 'username not containing \'@\''),
                     // makes sure field is not left empty
                     validator: (val) => val.isEmpty ? 'Enter a username' : null,
                     onChanged: (val) {
@@ -73,7 +77,8 @@ class _RegisterState extends State<Register> {
                       thinking user name is a valid email (easier than making a
                       custom function)
                       */
-                      setState(() => email = '${val}@fwitter.com');
+                      setState(() => email = '$val@fwitter.com');
+                      username = email.substring(0, email.indexOf('@'));
                     }
                 ),
                 SizedBox(height: 20.0),
@@ -89,49 +94,43 @@ class _RegisterState extends State<Register> {
                   },
                 ),
                 SizedBox(height: 20.0),
-                // 'Register' button
-                ElevatedButton(
-                  child: Text('Register',),
-                  onPressed: () async {
-                    // works if it receives null from validators
-                    if(_formKey.currentState.validate()) {
-                      // go to loading screen while waiting for authentication
-                      setState(() => loading = true);
-                      // auth change causes login (see auth.dart)
-                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                      if(result == null) {
-                        setState(() {
-                          // returns to registration screen if Firebase decides user name has been used
-                          error = 'username is taken or \'@\' (not allowed) used in username';
-                          loading = false;
-                        });
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    child: Text('Register'),
+                    onPressed: () async {
+                      // works if it receives null from validators
+                      if(_formKey.currentState.validate()) {
+                        // go to loading screen while waiting for authentication
+                        setState(() => loading = true);
+                        // auth change causes login (see auth.dart)
+                        dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                        if(result == null) {
+                          setState(() {
+                            // returns to registration screen if Firebase decides user name has been used
+                            error = 'username is taken';
+
+                            loading = false;
+                          });
+                        }
                       }
-                    }
-                  },
-                  // appearance of register button
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if(states.contains(MaterialState.pressed))
-                          return Colors.black;
-                        return Colors.blueAccent;
-                      },
+                    },
+                    // appearance of register button
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          if(states.contains(MaterialState.pressed))
+                            return Colors.black;
+                          return Colors.blueAccent;
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 12.0),
-                // error message, in case of invalid email
-                Text(
-                  error,
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 14.0,
                   ),
                 ),
               ],
             ),
           ),
-        )
+        ),
     );
   }
 }

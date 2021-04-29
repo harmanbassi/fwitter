@@ -1,5 +1,5 @@
-import 'package:fwitter/screens/authenticate/sign_in.dart';
-import 'package:fwitter/screens/authenticate/register.dart';
+import 'package:fwitter/pages/authenticate/sign_in.dart';
+import 'package:fwitter/pages/authenticate/register.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
