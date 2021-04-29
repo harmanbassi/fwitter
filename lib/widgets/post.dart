@@ -113,7 +113,10 @@ class _PostState extends State<Post> {
           ),
           trailing: isPostOwner
               ? IconButton(
-            onPressed: () => handleDeletePost(context),
+            onPressed: () {
+              handleDeletePost(context);
+              setState(() {});
+              },
             icon: Icon(Icons.more_vert),
           )
               : Text(''),
@@ -133,6 +136,7 @@ class _PostState extends State<Post> {
                   onPressed: () {
                     Navigator.pop(context);
                     deletePost();
+                    setState(() {});
                   },
                   child: Text(
                     'Delete',
@@ -193,7 +197,6 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .doc(postId)
           .update({'likes.$currentUserId': false});
-      removeLikeFromActivityFeed();
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -205,7 +208,6 @@ class _PostState extends State<Post> {
           .collection('userPosts')
           .doc(postId)
           .update({'likes.$currentUserId': true});
-      addLikeToActivityFeed();
       setState(() {
         likeCount += 1;
         isLiked = true;
@@ -220,40 +222,11 @@ class _PostState extends State<Post> {
     }
   }
 
-  addLikeToActivityFeed() {
-    // add a notification to the postOwner's activity feed only if comment made by OTHER user (to avoid getting notification for our own like)
-    bool isNotPostOwner = currentUserId != ownerId;
-    if (isNotPostOwner) {
-      activityFeedRef
-          .doc(ownerId)
-          .collection("feedItems")
-          .doc(postId)
-          .set({
-        "type": "like",
-        "username": a.currentUser.username,
-        "userId": a.currentUser.id,
-        "userProfileImg": a.currentUser.photoUrl,
-        "postId": postId,
-        "mediaUrl": mediaUrl,
-        "timestamp": a.timestamp,
-      });
-    }
-  }
-
-  removeLikeFromActivityFeed() {
-    bool isNotPostOwner = currentUserId != ownerId;
-    if (isNotPostOwner) {
-      activityFeedRef
-          .doc(ownerId)
-          .collection("feedItems")
-          .doc(postId)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          doc.reference.delete();
-        }
-      });
-    }
+  buildFweet() {
+    return GestureDetector(
+      onDoubleTap: handleLikePost,
+      child: Text(description),
+    );
   }
 
   buildPostImage() {
@@ -314,6 +287,7 @@ class _PostState extends State<Post> {
             ),
           ],
         ),
+        mediaUrl == '' ? Padding(padding: EdgeInsets.only(bottom: 0.0)) :
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -338,13 +312,21 @@ class _PostState extends State<Post> {
   Widget build(BuildContext context) {
     isLiked = (likes[currentUserId] == true);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        buildPostHeader(),
-        buildPostImage(),
-        buildPostFooter()
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        border: Border (
+          top: BorderSide(width: 0.50, color: Colors.lightBlue.shade600),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          buildPostHeader(),
+          mediaUrl == '' ? buildFweet() : buildPostImage(),
+          buildPostFooter()
+        ],
+      ),
+      padding: EdgeInsets.only(bottom: 5.0)
     );
   }
 

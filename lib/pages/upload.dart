@@ -30,6 +30,9 @@ class _UploadState extends State<Upload>
   File image;
   String mediaUrl;
   Post currentPost;
+  bool isFweet;
+  String fweetText;
+  bool isSplash = true;
 
   Container buildSplashScreen() {
     return Container(
@@ -63,8 +66,9 @@ class _UploadState extends State<Upload>
                     fontSize: 22.0,
                   ),
                 ),
-                // TODO
                 onPressed: () async {
+                isFweet = false;
+                isSplash = false;
                   // select image from gallery
                   PickedFile pickedImage = await picker.getImage(source: ImageSource.gallery);
                   image = File(pickedImage.path);
@@ -75,7 +79,36 @@ class _UploadState extends State<Upload>
                   setState(() {});
                 }
             ),
-          )
+          ),
+          ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(color: Colors.lightBlueAccent)
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.black;
+                    return Colors.blueAccent;
+                  },
+                ),
+              ),
+              child: Text(
+                "Upload Fweet",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22.0,
+                ),
+              ),
+              onPressed: () {
+                isFweet = true;
+                isSplash = false;
+                setState(() {});
+              }
+          ),
         ],
       ),
     );
@@ -116,6 +149,7 @@ class _UploadState extends State<Upload>
     currentPost = Post.fromDocument(doc);
   }
 
+  // handles submission of image posts
   handleSubmit() async {
     setState(() {
       isUploading = true;
@@ -132,22 +166,23 @@ class _UploadState extends State<Upload>
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: clearImage),
         title: Text(
-          "Caption Post",
+          "Text",
           style: TextStyle(color: Colors.black),
         ),
         actions: [
           TextButton(
             onPressed: isUploading ? null : () {
-              createPostInFirestore(
-              mediaUrl: mediaUrl,
-              description: captionController.text,
-              );
-              setState(() {
-                captionController.clear();
-                image = null;
-                postId = Uuid().v4();
-              });
-            },
+                createPostInFirestore(
+                  mediaUrl: mediaUrl,
+                  description: captionController.text,
+                );
+                setState(() {
+                  captionController.clear();
+                  image = null;
+                  postId = Uuid().v4();
+                });
+                isSplash = true;
+              },
             child: Text(
               "Post",
               style: TextStyle(
@@ -192,7 +227,7 @@ class _UploadState extends State<Upload>
               child: TextField(
                 controller: captionController,
                 decoration: InputDecoration(
-                  hintText: "Write a caption...",
+                  hintText: "Say something meaningful",
                   border: InputBorder.none,
                 ),
               ),
@@ -203,12 +238,76 @@ class _UploadState extends State<Upload>
     );
   }
 
+  Scaffold buildFweetUploadForm()  {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: clearImage),
+          title: Text(
+            "Post Fweet",
+            style: TextStyle(color: Colors.black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await postsRef
+                    .doc(a.currentUser.id)
+                    .collection("userPosts")
+                    .doc(postId)
+                    .set({
+                "postId": postId,
+                "ownerId": widget.currentUser.id,
+                "username": widget.currentUser.username,
+                "mediaUrl": '',
+                "description": captionController.text,
+                "timestamp": a.timestamp,
+                "likes": {},
+                });
+                DocumentSnapshot doc = await postsRef.doc(a.currentUser.id)
+                    .collection("userPosts")
+                    .doc(postId).get();
+                currentPost = Post.fromDocument(doc);
+                isSplash = true;
+              },
+              child: Text(
+                "Post",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: ListTile(
+          leading: CircleAvatar(
+            backgroundImage:
+            CachedNetworkImageProvider(a.currentUser.photoUrl),
+          ),
+          title: Container(
+            width: 250.0,
+            child: TextField(
+              controller: captionController,
+              decoration: InputDecoration(
+                hintText: "Say something meaningful",
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
+    );
+  }
+
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
-    return image == null ? buildSplashScreen() : buildUploadForm();
+    return isSplash ? buildSplashScreen() : isFweet? buildFweetUploadForm()
+        : buildUploadForm();
   }
 }
