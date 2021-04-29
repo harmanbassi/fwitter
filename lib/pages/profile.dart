@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:fwitter/models/user.dart';
 import 'package:fwitter/pages/edit_profile.dart';
 import 'package:fwitter/pages/home.dart';
 import 'package:fwitter/widgets/post.dart';
-import 'package:fwitter/widgets/post_tile.dart';
 import 'package:fwitter/widgets/progress.dart';
 import 'authenticate/auth.dart' as a;
 

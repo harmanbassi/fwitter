@@ -106,7 +106,7 @@ const userId = context.params.userId;
 const postId = context.params.postId;
 
 // Get all the followers of the user who made the post
-    const userFollowersRef = admin.firestore
+    const userFollowersRef = admin.firestore()
         .collection('followers')
         .doc(userId)
         .collection('userFollowers');
@@ -138,7 +138,7 @@ const userId = context.params.userId;
 const postId = context.params.postId;
 
 // Get all the followers of the user who made the post
-    const userFollowersRef = admin.firestore
+    const userFollowersRef = admin.firestore()
         .collection('followers')
         .doc(userId)
         .collection('userFollowers');

@@ -19,7 +19,7 @@ class _SearchState extends State<Search>
 
   handleSearch(String query) {
     Future<QuerySnapshot> users = usersRef
-        .where("displayName", isGreaterThanOrEqualTo: query)
+        .where("username", isGreaterThanOrEqualTo: query)
         .get();
     setState(() {
       searchResultsFuture = users;
@@ -47,7 +47,7 @@ class _SearchState extends State<Search>
             onPressed: clearSearch,
           ),
         ),
-        onFieldSubmitted: handleSearch,
+        onFieldSubmitted: handleSearch(searchController.text),
       ),
     );
   }
@@ -60,7 +60,7 @@ class _SearchState extends State<Search>
           shrinkWrap: true,
           children: <Widget>[
             SvgPicture.asset(
-              'assets/images/search.svg',
+              'assets/search.svg',
               height: orientation == Orientation.portrait ? 300.0 : 200.0,
             ),
             Text(
@@ -87,7 +87,7 @@ class _SearchState extends State<Search>
           return circularProgress();
         }
         List<UserResult> searchResults = [];
-        snapshot.data.documents.forEach((doc) {
+        snapshot.data.docs.forEach((doc) {
           User user = User.fromDocument(doc);
           UserResult searchResult = UserResult(user);
           searchResults.add(searchResult);
@@ -106,7 +106,7 @@ class _SearchState extends State<Search>
     super.build(context);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
+      backgroundColor: Colors.blue[50],
       appBar: buildSearchField(),
       body:
       searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
@@ -122,7 +122,7 @@ class UserResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColor.withOpacity(0.7),
+      color: Colors.blueAccent,
       child: Column(
         children: <Widget>[
           GestureDetector(
