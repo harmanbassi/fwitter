@@ -223,9 +223,12 @@ class _PostState extends State<Post> {
   }
 
   buildFweet() {
-    return GestureDetector(
-      onDoubleTap: handleLikePost,
-      child: Text(description),
+    return Padding(
+      padding: EdgeInsets.all(20.0),
+      child: GestureDetector(
+        onDoubleTap: handleLikePost,
+        child: Text(description),
+      ),
     );
   }
 

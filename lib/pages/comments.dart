@@ -50,7 +50,7 @@ class CommentsState extends State<Comments> {
             return circularProgress();
           }
           List<Comment> comments = [];
-          snapshot.data.documents.forEach((doc) {
+          snapshot.data.docs.forEach((doc) {
             comments.add(Comment.fromDocument(doc));
           });
           return ListView(

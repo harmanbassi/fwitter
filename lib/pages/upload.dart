@@ -244,7 +244,12 @@ class _UploadState extends State<Upload>
           backgroundColor: Colors.blueAccent,
           leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: clearImage),
+              onPressed: () {
+               captionController.clear();
+               isSplash = true;
+               setState(() {});
+              }
+          ),
           title: Text(
             "Post Fweet",
             style: TextStyle(color: Colors.black),
@@ -270,6 +275,7 @@ class _UploadState extends State<Upload>
                     .doc(postId).get();
                 currentPost = Post.fromDocument(doc);
                 isSplash = true;
+                setState(() {});
               },
               child: Text(
                 "Post",
