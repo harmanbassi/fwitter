@@ -17,7 +17,7 @@ exports.onCreateFollower = functions.firestore
         const followerId = context.params.followerId;
 
         // Create followed users' posts ref
-        const followedUserPostsRef = admin.firesotre().collection('posts')
+        const followedUserPostsRef = admin.firestore().collection('posts')
             .doc(userId)
             .collection('userPosts');
 
