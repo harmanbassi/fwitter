@@ -28,7 +28,7 @@ class _TimelineState extends State<Timeline> {
   void initState() {
     super.initState();
     getTimeline();
-    // getFollowing();
+    getFollowing();
   }
 
   getTimeline() async {
@@ -43,16 +43,16 @@ class _TimelineState extends State<Timeline> {
       this.posts = posts;
     });
   }
-  //
-  // getFollowing() async {
-  //   QuerySnapshot snapshot = await followingRef
-  //       .doc(currentUser.id)
-  //       .collection('userFollowing')
-  //       .get();
-  //   setState(() {
-  //     followingList = snapshot.docs.map((doc) => doc.documentID).toList();
-  //   });
-  // }
+
+  getFollowing() async {
+    QuerySnapshot snapshot = await followingRef
+        .doc(a.currentUser.id)
+        .collection('userFollowing')
+        .get();
+    setState(() {
+      followingList = snapshot.docs.map((doc) => doc.id).toList();
+    });
+  }
 
   buildTimeline() {
     if (posts == null) {

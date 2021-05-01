@@ -313,7 +313,7 @@ class _UploadState extends State<Upload>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return isSplash ? buildSplashScreen() : isFweet? buildFweetUploadForm()
+    return isSplash || image == null ? buildSplashScreen() : isFweet? buildFweetUploadForm()
         : buildUploadForm();
   }
 }
