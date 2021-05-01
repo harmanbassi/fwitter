@@ -11,7 +11,7 @@ import 'package:fwitter/pages/upload.dart';
 import 'package:provider/provider.dart';
 import 'authenticate/authenticate.dart';
 
-
+// references to relevant collections in firebase
 final Reference storageRef = FirebaseStorage.instance.ref();
 final usersRef = FirebaseFirestore.instance.collection('users');
 final postsRef = FirebaseFirestore.instance.collection('posts');
@@ -31,7 +31,6 @@ class _HomeState extends State<Home> {
   bool isAuth = false;
   PageController pageController;
   int pageIndex = 0;
-  final f.FirebaseAuth _auth = f.FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -45,12 +44,14 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+  // handles page changes
   onPageChanged(int pageIndex) {
     setState(() {
       this.pageIndex = pageIndex;
     });
   }
 
+  // animates page changes
   onTap(int pageIndex) {
     pageController.animateToPage(
       pageIndex,
@@ -65,6 +66,7 @@ class _HomeState extends State<Home> {
       key: _scaffoldKey,
       body: PageView(
         children: <Widget>[
+          // screens, which can be navigated to
           Timeline(currentUser: currentUser),
           Upload(currentUser: currentUser),
           Search(),
@@ -72,6 +74,7 @@ class _HomeState extends State<Home> {
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
+        // makes sure all page icons fit in the navigation bar without scrolling
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: CupertinoTabBar(

@@ -17,6 +17,7 @@ class _SearchState extends State<Search>
   TextEditingController searchController = TextEditingController();
   Future<QuerySnapshot> searchResultsFuture;
 
+  // checks to see if any usernames match the search query
   handleSearch(String query) {
     Future<QuerySnapshot> users = usersRef
         .where("username", isGreaterThanOrEqualTo: query)
@@ -30,6 +31,7 @@ class _SearchState extends State<Search>
     searchController.clear();
   }
 
+  // appearance of search field
   AppBar buildSearchField() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -42,16 +44,19 @@ class _SearchState extends State<Search>
             Icons.account_box,
             size: 28.0,
           ),
+          // 'x' on right, clears search field
           suffixIcon: IconButton(
             icon: Icon(Icons.clear),
             onPressed: clearSearch,
           ),
         ),
+        // submits query to execute the search
         onFieldSubmitted: handleSearch(searchController.text),
       ),
     );
   }
 
+  // if no search is executed
   Container buildNoContent() {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
@@ -79,6 +84,7 @@ class _SearchState extends State<Search>
     );
   }
 
+  // shows search results from Firebase after search is executed
   buildSearchResults() {
     return FutureBuilder(
       future: searchResultsFuture,
@@ -105,6 +111,7 @@ class _SearchState extends State<Search>
   Widget build(BuildContext context) {
     super.build(context);
 
+    // decides to show search results or no content, based on whether a search has been executed or not
     return Scaffold(
       backgroundColor: Colors.blue[50],
       appBar: buildSearchField(),
@@ -119,6 +126,7 @@ class UserResult extends StatelessWidget {
 
   UserResult(this.user);
 
+  // appearance of results of the search
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,6 +160,7 @@ class UserResult extends StatelessWidget {
     );
   }
 
+  // if search result is tapped on, navigates to user's profile
   showProfile(BuildContext context, {String profileId}) {
     Navigator.push(
       context,

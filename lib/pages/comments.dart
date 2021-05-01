@@ -38,6 +38,7 @@ class CommentsState extends State<Comments> {
     this.postMediaUrl,
   });
 
+  // retrieves comments from firebase and builds them as a listView
   buildComments() {
     return StreamBuilder(
         stream: commentsRef
@@ -59,6 +60,7 @@ class CommentsState extends State<Comments> {
         });
   }
 
+  // adds new comment to firebase collection
   addComment() {
     commentsRef.doc(postId).collection("comments").add({
       "username": a.currentUser.username,
@@ -69,6 +71,7 @@ class CommentsState extends State<Comments> {
     });
     bool isNotPostOwner = postOwnerId != a.currentUser.id;
     if (isNotPostOwner) {
+      // meant for the additional implementation of Activity feed
       activityFeedRef.doc(postOwnerId).collection('feedItems').add({
         "type": "comment",
         "commentData": commentController.text,
@@ -90,6 +93,7 @@ class CommentsState extends State<Comments> {
         title: Text('Comments'),
         backgroundColor: Colors.blueAccent,
       ),
+      // handles Comment input
       body: Column(
         children: <Widget>[
           Expanded(child: buildComments()),
@@ -99,6 +103,7 @@ class CommentsState extends State<Comments> {
               controller: commentController,
               decoration: InputDecoration(labelText: "Write a comment..."),
             ),
+            // addComment on post
             trailing: OutlinedButton(
               onPressed: addComment,
               child: Text("Post"),
@@ -137,6 +142,7 @@ class Comment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // appearance of Comments
     return Column(
       children: <Widget>[
         ListTile(

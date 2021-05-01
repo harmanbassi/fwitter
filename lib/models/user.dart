@@ -11,6 +11,7 @@ class User {
     this.photoUrl,
   });
 
+  // allows for the creation of a User directly form a firebase document
   factory User.fromDocument(DocumentSnapshot doc) {
     return User(
       id: doc['id'],

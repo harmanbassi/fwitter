@@ -34,6 +34,7 @@ class _UploadState extends State<Upload>
   String fweetText;
   bool isSplash = true;
 
+  // provides users with two options: upload image or Fweet
   Container buildSplashScreen() {
     return Container(
       color: Colors.blue[50],
@@ -43,6 +44,7 @@ class _UploadState extends State<Upload>
           SvgPicture.asset('assets/upload.svg', height: 260.0),
           Padding(
             padding: EdgeInsets.only(top: 20.0),
+            // button to upload image
             child: ElevatedButton(
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -80,6 +82,7 @@ class _UploadState extends State<Upload>
                 }
             ),
           ),
+          // button to upload Fweet
           ElevatedButton(
               style: ButtonStyle(
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -114,12 +117,14 @@ class _UploadState extends State<Upload>
     );
   }
 
+  // clears image so that next upload can start afresh
   clearImage() {
     setState(() {
       image = null;
     });
   }
 
+  // uploads image to Firestore and retreive download url
   Future<String> uploadImage(File file) async{
     var uploadTask = storageRef.child("posts/$postId").putFile(file);
     var completedTask = await uploadTask;
@@ -127,6 +132,7 @@ class _UploadState extends State<Upload>
     return downloadUrl;
   }
 
+  // creates a new post in firestore, so that it can be accessed by profile and timeline
   createPostInFirestore(
       {String mediaUrl, String description}) async {
     mediaUrl = await uploadImage(image);
@@ -158,10 +164,12 @@ class _UploadState extends State<Upload>
     isUploading = false;
   }
 
+  // builds image upload form, including caption
   Scaffold buildUploadForm() {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
+        // back button
         leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: clearImage),
@@ -170,12 +178,15 @@ class _UploadState extends State<Upload>
           style: TextStyle(color: Colors.black),
         ),
         actions: [
+          // post button
           TextButton(
+            // creates the post in firestore
             onPressed: isUploading ? null : () {
                 createPostInFirestore(
                   mediaUrl: mediaUrl,
                   description: captionController.text,
                 );
+                // creats caption controller for next post upload and assigns a unique post ID
                 setState(() {
                   captionController.clear();
                   image = null;
@@ -194,6 +205,7 @@ class _UploadState extends State<Upload>
           ),
         ],
       ),
+      // displays image to upload and caption
       body: ListView(
         children: <Widget>[
           isUploading ? linearProgress() : Text(""),
@@ -238,6 +250,7 @@ class _UploadState extends State<Upload>
     );
   }
 
+  //  builds Fweet upload form, which is simply text, similar to upload form above
   Scaffold buildFweetUploadForm()  {
     return Scaffold(
         appBar: AppBar(
@@ -313,6 +326,7 @@ class _UploadState extends State<Upload>
   Widget build(BuildContext context) {
     super.build(context);
 
+    // show splashScreen first, then switch to upload form depending on which button is pressed
     return isSplash || image == null ? buildSplashScreen() : isFweet? buildFweetUploadForm()
         : buildUploadForm();
   }

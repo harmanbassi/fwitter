@@ -26,6 +26,7 @@ class _EditProfileState extends State<EditProfile> {
   final picker = new ImagePicker();
   File image;
 
+  // uploads profile picture to firebase storage and fetches download url
   Future<String> uploadProfilePic(File file) async{
     var userId = a.currentUser.id;
     var uploadTask = storageRef.child("profile_pics/$userId").putFile(file);
@@ -34,6 +35,7 @@ class _EditProfileState extends State<EditProfile> {
     return downloadUrl;
   }
 
+  // sets the upload profile picture to the new one, uploaded by user
   Future<void> setProfilePicture(File image) async {
     a.currentUser.photoUrl = await uploadProfilePic(image);
   }
@@ -44,6 +46,7 @@ class _EditProfileState extends State<EditProfile> {
     getUser();
   }
 
+  // retrieves user from firebase
   getUser() async {
     setState(() {
       isLoading = true;
@@ -68,6 +71,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
         actions: <Widget>[
+          // 'done' button in AppBar, to finish editing profile
           IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -92,6 +96,7 @@ class _EditProfileState extends State<EditProfile> {
                           top: 16.0,
                           bottom: 8.0,
                         ),
+                        // shows profile picture, allowing user to change it on tap
                         child: Avatar(
                           photoUrl: a.currentUser?.photoUrl,
                           onTap: () async{

@@ -26,7 +26,6 @@ class _ProfileState extends State<Profile> {
   int followerCount = 0;
   int followingCount = 0;
   List<Post> posts = [];
-  final a.AuthService _auth = a.AuthService();
 
   @override
   void initState() {
@@ -52,6 +51,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // gets amount of all the user's followers
   getFollowers() async {
     QuerySnapshot snapshot = await followersRef
         .doc(widget.profileId)
@@ -62,6 +62,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // gets amount of user's current user is following
   getFollowing() async {
     QuerySnapshot snapshot = await followingRef
         .doc(widget.profileId)
@@ -72,6 +73,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // retrieves profile posts from Firebase
   getProfilePosts() async {
     setState(() {
       isLoading = true;
@@ -88,6 +90,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // template for the count tiles (posts, followers, following)
   Column buildCountColumn(String label, int count) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -112,6 +115,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // navigate to editProfile screen
   editProfile() {
     Navigator.push(
         context,
@@ -119,6 +123,7 @@ class _ProfileState extends State<Profile> {
             builder: (context) => EditProfile(currentUserId: currentUserId))).then(onGoBack);
   }
 
+  // appearance of button depending on whether the user is already being followed or not
   Container buildButton({String text, Function function}) {
     return Container(
       padding: EdgeInsets.only(top: 2.0),
@@ -147,6 +152,8 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  // behaviour of button, depending on whether it is the current user's profile, the current
+  // user is following this user, or not
   buildProfileButton() {
     // viewing your own profile - should show edit profile button
     bool isProfileOwner = currentUserId == widget.profileId;
@@ -168,6 +175,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  // makes sure the current user is not following this user anymore
   handleUnfollowUser() {
     setState(() {
       isFollowing = false;
@@ -207,6 +215,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // follows user
   handleFollowUser() {
     setState(() {
       isFollowing = true;
@@ -238,6 +247,8 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  // Profile header including profile pic, name, the three counts (posts, folowers, following)
+  // and edit profile/follow/unfollow button
   buildProfileHeader() {
     return FutureBuilder(
         future: usersRef.doc(widget.profileId).get(),
@@ -252,6 +263,7 @@ class _ProfileState extends State<Profile> {
               children: <Widget>[
                 Row(
                   children: <Widget>[
+                    // shows profile picture
                     CircleAvatar(
                       radius: 40.0,
                       backgroundColor: Colors.grey,
@@ -262,6 +274,7 @@ class _ProfileState extends State<Profile> {
                       flex: 1,
                       child: Column(
                         children: <Widget>[
+                          // shows 3 counts
                           Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -271,6 +284,7 @@ class _ProfileState extends State<Profile> {
                               buildCountColumn("following", followingCount),
                             ],
                           ),
+                          // shows edit profile/follow/unfollow
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -282,6 +296,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ],
                 ),
+                // displays username
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(top: 12.0),
@@ -299,9 +314,12 @@ class _ProfileState extends State<Profile> {
         });
   }
 
+  // sets appearance of profile posts
   buildProfilePosts() {
+    // conveys taht posts are loading
     if (isLoading) {
       return circularProgress();
+      // shown if there are no posts
     } else if (posts.isEmpty) {
       return Container(
         child: Column(
@@ -321,6 +339,7 @@ class _ProfileState extends State<Profile> {
           ],
         ),
       );
+      // show all posts
     } else {
       return Column(
         children: posts,
@@ -336,6 +355,7 @@ class _ProfileState extends State<Profile> {
         title: Text('Profile'),
         backgroundColor: Colors.blueAccent,
       ),
+      // builds the full profile
       body: ListView(
         children: <Widget>[
           buildProfileHeader(),

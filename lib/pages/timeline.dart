@@ -31,6 +31,7 @@ class _TimelineState extends State<Timeline> {
     getFollowing();
   }
 
+  // retrieves current users's timeline from Firebase, ordered by time (newest first)
   getTimeline() async {
     QuerySnapshot snapshot = await timelineRef
         .doc(a.currentUser.id)
@@ -44,6 +45,7 @@ class _TimelineState extends State<Timeline> {
     });
   }
 
+  // gets the users being followed for timeline posts
   getFollowing() async {
     QuerySnapshot snapshot = await followingRef
         .doc(a.currentUser.id)
@@ -54,16 +56,21 @@ class _TimelineState extends State<Timeline> {
     });
   }
 
+  // build timeline based on followed users
   buildTimeline() {
+    // loading screen
     if (posts == null) {
       return circularProgress();
+      // suggest users to follow if current user is not following anyone
     } else if (posts.isEmpty) {
+      // show posts by followed users
       return buildUsersToFollow();
     } else {
       return ListView(children: posts);
     }
   }
 
+  // retrieves suggestions for users to follow, ordered by when they joined Fwitter
   buildUsersToFollow() {
     return StreamBuilder(
       stream:
@@ -87,6 +94,7 @@ class _TimelineState extends State<Timeline> {
             userResults.add(userResult);
           }
         });
+        // appearance of suggestions
         return Container(
           color: Theme.of(context).accentColor.withOpacity(0.2),
           child: Column(
@@ -122,6 +130,7 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
+  // appearance of main timeline screen
   @override
   Widget build(context) {
     return Scaffold(
@@ -132,6 +141,7 @@ class _TimelineState extends State<Timeline> {
           backgroundColor: Colors.blueAccent,
           elevation: 0.0,
           actions: [
+            // allows users to logout from this screen
             // Logout Button
             TextButton.icon(
             onPressed: () async {
@@ -150,6 +160,7 @@ class _TimelineState extends State<Timeline> {
           ),
         ]
     ),
+        // pull down to refresh timeline
         body: RefreshIndicator(
             onRefresh: () => getTimeline(), child: buildTimeline()));
   }
